@@ -45,7 +45,7 @@ class CarController {
      */
     @GetMapping
     Resources<Resource<Car>> list() {
-        List<Resource<Car>> resources = carService.list().stream().map(assembler::toResource)
+        List<Resource<Car>> resources = this.carService.list().stream().map(this.assembler::toResource)
                 .collect(Collectors.toList());
         return new Resources<>(resources,
                 linkTo(methodOn(CarController.class).list()).withSelfRel());
@@ -63,7 +63,8 @@ class CarController {
          * TODO: Use the `assembler` on that car and return the resulting output.
          *   Update the first line as part of the above implementing.
          */
-        return assembler.toResource(new Car());
+        Car carFoundById = this.carService.findById(id);
+        return assembler.toResource(carFoundById);
     }
 
     /**
