@@ -33,6 +33,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 /**
  * Implements testing of the CarController class.
@@ -77,6 +78,7 @@ public class CarControllerTest {
     @Test
     public void createCar() throws Exception {
         Car car = getCar();
+        car.setId(1L);
         mvc.perform(
                 post(new URI("/cars"))
                         .content(json.write(car).getJson())
@@ -96,6 +98,14 @@ public class CarControllerTest {
          *   the whole list of vehicles. This should utilize the car from `getCar()`
          *   below (the vehicle will be the first in the list).
          */
+       Car car = getCar();
+       this.mvc.perform(
+               get(new URI("/cars"))
+                       .contentType(MediaType.APPLICATION_JSON_UTF8)
+                       .accept(MediaType.APPLICATION_JSON_UTF8))
+               .andExpect(MockMvcResultMatchers.status().isOk())
+               .andExpect(jsonPath("$._embedded.carList[0].details.manufacturer.name").value("Chevrolet"));
+
 
     }
 
@@ -109,6 +119,13 @@ public class CarControllerTest {
          * TODO: Add a test to check that the `get` method works by calling
          *   a vehicle by ID. This should utilize the car from `getCar()` below.
          */
+        Car car = getCar();
+        this.mvc.perform(
+                get(new URI("/cars/1"))
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(jsonPath("$.details.manufacturer.name").value("Chevrolet"));
     }
 
     /**
@@ -122,6 +139,10 @@ public class CarControllerTest {
          *   when the `delete` method is called from the Car Controller. This
          *   should utilize the car from `getCar()` below.
          */
+        Car car = getCar();
+        this.mvc.perform(
+                delete("/cars/1")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8));
     }
 
     /**
