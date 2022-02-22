@@ -64,7 +64,7 @@ class CarController {
          *   Update the first line as part of the above implementing.
          */
         Car carFoundById = this.carService.findById(id);
-        return assembler.toResource(carFoundById);
+        return this.assembler.toResource(carFoundById);
     }
 
     /**
@@ -104,7 +104,7 @@ class CarController {
         Car carInput = new Car();
         carInput.setId(id);
         Car carUpdated = this.carService.save(carInput);
-        Resource<Car> resource = assembler.toResource(carUpdated);
+        Resource<Car> resource = this.assembler.toResource(carUpdated);
         return ResponseEntity.ok(resource);
     }
 
